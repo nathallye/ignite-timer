@@ -19,7 +19,7 @@ Para a criação do projeto React com o Vite utilizei o passo a passo que consta
 > npm run dev
 ```
 
-## Styled Components
+### Styled Components
 
 - Para instalar o Styled Components iremos rodar os comandos seguintes?
 
@@ -75,10 +75,6 @@ export const Button = ({ varient = "primary" }: ButtonProps) => {
 
 ``` TSX
 import { Button } from "./components/Button/Button";
-
-import styles from "./App.module.css";
-
-import "./global.css";
 
 export const App = () => {
   return (
@@ -138,4 +134,65 @@ export const ButtonContainer = styled.button<ButtonContainerProps>`
     `
   }}
 `;
+```
+
+### Configurando temas
+
+- Em `src` iremos criar uma pasta `styles` e dentro dela a pasta `themes`, nas pasta `themes` vamos criar uma arquivo chamado `default.ts`. Neste arquivo, iremos definir um tema padrão da nossa aplicação:
+
+``` TS
+export const defaultTheme = {
+  white: "#FFF",
+  primary: "#8257e6",
+  secondary: "orange",
+}
+```
+
+- Agora, no componente principal(App) basta envolver os componentes que irão usar esse tema, pelo componente `ThemeProvider`:
+
+``` TSX
+import { ThemeProvider } from "styled-components";
+import { defaultTheme } from "./styles/themes/default";
+
+import { Button } from "./components/Button/Button";
+
+export const App = () => {
+  return (
+    <ThemeProvider theme={defaultTheme}>
+      <Button />
+    </ThemeProvider>
+  );
+};
+```
+
+- Feito isso, conseguimos acessar esse tema via props:
+
+``` TSX
+import styled from "styled-components";
+
+export const ButtonContainer = styled.button`
+  width: 100px;
+  height: 40px;
+  border-radius: 4px;
+  border: 0;
+  margin: 8px;
+
+  background-color: ${props => props.theme.primary};
+  color: ${props => props.theme.white};
+`;
+```
+
+#### Tipagem de temas
+
+- Em `src` iremos criar uma pasta `@types` e dentro dela um arquivo chamado styled.d.ts(arquivo de definição de tipos):
+
+``` TS
+import "styled-components";
+import { defaultTheme } from "../styles/themes/default";
+
+type ThemeType = typeof defaultTheme; // pegando o tipo que o TS já infere
+
+declare module "styled-components" {
+  export interface DefaultTheme extends ThemeType {}
+}
 ```
