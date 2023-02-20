@@ -19,7 +19,7 @@ Para a criação do projeto React com o Vite utilizei o passo a passo que consta
 > npm run dev
 ```
 
-### Styled Components
+## Styled Components
 
 - Para instalar o Styled Components iremos rodar os comandos seguintes?
 
@@ -196,3 +196,6 @@ declare module "styled-components" {
   export interface DefaultTheme extends ThemeType {}
 }
 ```
+
+### Estilos globais
+
