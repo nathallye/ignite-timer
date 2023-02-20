@@ -317,3 +317,42 @@ export const App = () => {
   );
 };
 ```
+
+### Layout de rotas
+
+- Em `src` vamos criar a pasta `layouts` e nela o arquivo/componente `DefaultLayout.tsx`:
+
+``` TSX
+import { Outlet } from "react-router-dom";
+import { Header } from "../components/Header";
+
+export const DefaultLayout = () => {
+  return (
+    <>
+      <Header />
+      <Outlet /> {/* renderiza o conteúdo dinamicamente */}
+    </>
+  );
+};
+```
+
+- Feito isso, no arquivo de rotas(`Router.tsx`) iremos envolver as rotas da aplicação, pela rota padrão(DefaultLayout):
+
+``` TSX
+import { Routes, Route } from "react-router-dom";
+
+import { DefaultLayout } from "./layouts/DefaultLayout";
+import { Home } from "./pages/Home";
+import { History } from "./pages/History";
+
+export const Router = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<DefaultLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/history" element={<History />} />
+      </Route>
+    </Routes>
+  );
+};
+```
