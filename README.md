@@ -24,8 +24,8 @@ Para a criação do projeto React com o Vite utilizei o passo a passo que consta
 - Para instalar o Styled Components iremos rodar os comandos seguintes?
 
 ```
-npm i styled-components
-npm i @types/styled-components
+> npm i styled-components
+> npm i @types/styled-components
 ```
 
 - O que o Styled Components resolve? É muito comum dentro do React precisarmos de estilizações que são baseadas em informações enviadas via props. Exemplo, temos um componente Button que a sua cor de fundo irá variar de acordo com a propriedade enviada pelo seu componente pai.
@@ -259,6 +259,60 @@ export const App = () => {
     <ThemeProvider theme={defaultTheme}>
       <GlobalStyle />
       <Button />
+    </ThemeProvider>
+  );
+};
+```
+
+## React Router
+
+O React Router permite "roteamento do lado do cliente". Navegação entre páginas.
+
+- Vamos rodar o comando seguinte para instalar o pacote react router:
+
+```
+> npm install react-router-dom
+```
+
+### Criando os arquivos de rotas
+
+- Em `src` vamos criar a pasta `pages` e nela os arquivos/componentes `History.tsx` e `Home.tsx`(serão nossas páginas).
+
+- Feito isso, em `src` iremos criar um arquivo chamado `Router.tsx` que irá guardar as definições de rotas da aplicação:
+
+``` TSX
+import { Routes, Route } from "react-router-dom";
+
+import { Home } from "./components/Home";
+import { History } from "./components/History";
+
+export const Router = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/history" element={<History />} />
+    </Routes>
+  );
+};
+```
+
+- Agora, iremos importá-lo dentro do componente principal(App) da aplicação (iremos excluir o componente Button, pois ele foi usado apenas como exemplo) envolvendo-o pelo componente `BrowserRouter` do React Router Dom:
+
+``` TSX
+import { ThemeProvider } from "styled-components";
+import { defaultTheme } from "./styles/themes/default";
+import { GlobalStyle } from "./styles/global";
+import { BrowserRouter } from "react-router-dom";
+
+import { Router } from "./Router";
+
+export const App = () => {
+  return (
+    <ThemeProvider theme={defaultTheme}>
+      <BrowserRouter>
+        <Router />
+      </BrowserRouter>
+      <GlobalStyle />
     </ThemeProvider>
   );
 };
