@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 
-import { Home } from "./components/Home";
-import { History } from "./components/History";
+import { Home } from "./pages/Home";
+import { History } from "./pages/History";
 
 export const Router = () => {
   return (
