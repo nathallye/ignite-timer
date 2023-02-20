@@ -184,7 +184,7 @@ export const ButtonContainer = styled.button`
 
 #### Tipagem de temas
 
-- Em `src` iremos criar uma pasta `@types` e dentro dela um arquivo chamado styled.d.ts(arquivo de definição de tipos):
+- Em `src` iremos criar uma pasta `@types` e dentro dela um arquivo chamado `styled.d.ts`(arquivo de definição de tipos):
 
 ``` TS
 import "styled-components";
@@ -199,3 +199,40 @@ declare module "styled-components" {
 
 ### Estilos globais
 
+- Em `src/styles` iremos criar um arquivo chamado `global.ts`(em aplicação com styled component não iremos trabalhar com arquivos css):
+
+``` TS
+import { createGlobalStyle } from "styled-components";
+
+export const GlobalStyle = createGlobalStyle`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: #333;
+    color: #FFF;
+  }
+`;
+```
+
+- Agora, no componente principal(App) iremos importar esse componente `GlobalStyle`:
+
+``` TSX
+import { ThemeProvider } from "styled-components";
+import { defaultTheme } from "./styles/themes/default";
+
+import { GlobalStyle } from "./styles/global";
+import { Button } from "./components/Button/Button";
+
+export const App = () => {
+  return (
+    <ThemeProvider theme={defaultTheme}>
+      <GlobalStyle />
+      <Button />
+    </ThemeProvider>
+  );
+};
+```
