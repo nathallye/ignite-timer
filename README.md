@@ -359,11 +359,11 @@ export const Router = () => {
 
 ## React Hook Form
 
-Documentação: https://react-hook-form.com/
+Documentação: https://react-hook-form.com/.
 
 **Controlled x Uncontrolled**
 
-- `Controlled` - mater em tempo real a informação do input do usuário, guardado no estado, toda vez que uma alteração é feita o React irá recalcular todo conteúdo do componente do estado que mudou:
+- `Controlled`: matemos em tempo real a informação do input do usuário, guardado no estado, toda vez que uma alteração é feita o React irá recalcular todo conteúdo do componente do estado que mudou:
 
 ``` TSX
 const [task, setTask] = useState("");
@@ -384,8 +384,7 @@ const [task, setTask] = useState("");
   </StartCountdownButton>
 ```
 
-- `Uncontrolled` - buscamos a informação do input, somente quando precisarmos dela, sem controle de estado, usando as próprias funções JS.
-
+- `Uncontrolled`: buscamos a informação do input, somente quando precisarmos dela, sem controle de estado, usando as próprias funções JS.
 
 - Vamos instalar o React Hook Form com o comando seguinte:
 
