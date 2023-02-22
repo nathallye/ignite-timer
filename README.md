@@ -418,7 +418,7 @@ export const Home = () => {
             id="task"
             list="task-suggestions"
             placeholder="Dê um nome para o seu projeto"
-            {...register("task")} {/**O operador spreed pega todas as informações que o register possui e passa para o TaskInput
+            {...register("task")} {/**O operador spreed pega todas as ações que o register possui e passa para o TaskInput
               * function register(name: string) {
                 return {
                   onChange: () => void,
@@ -446,7 +446,7 @@ export const Home = () => {
             step={5}
             min={5}
             max={60}
-            {...register("minutesAmount", { valueAsNumber: true })} {/*O operador spreed pega todas as informações que o register possui e passa para o MinutesAmountInput*/}
+            {...register("minutesAmount", { valueAsNumber: true })} {/*O operador spreed pega todas as ações que o register possui e passa para o MinutesAmountInput*/}
           />
 
           <span>minutos.</span>
