@@ -17,14 +17,24 @@ export const Home = () => {
           <label htmlFor="task">Vou trabalhar em</label>
           <TaskInput
             id="task"
+            list="task-suggestions"
             placeholder="Dê um nome para o seu projeto"
           />
+
+          <datalist id="task-suggestions"> {/* lista de opções para o input*/}
+            <option value="Trabalhar" />
+            <option value="Assistir aulas de inglês" />
+            <option value="Assistir aulas de react" />
+          </datalist>
 
           <label htmlFor="minutesAmount">durante</label>
           <MinutesAmountInput
             type="number"
             id="minutesAmount"
             placeholder="00"
+            step={5}
+            min={5}
+            max={60}
           />
 
           <span>minutos.</span>
