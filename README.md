@@ -483,5 +483,81 @@ npm i @hookform/resolvers
 - Usando o Zod intregado ao React Hook Form para validar forms:
 
 ``` TSX
+import { Play } from "phosphor-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as zod from "zod";
+// [...]
 
+const newCycleFormValidationSchema = zod.object({
+  task: zod.string().min(1, "Informe a tarefa"),
+  minutesAmount: zod
+    .number()
+    .min(5, "O ciclo precisa ser de no mínimo 5 minutos.")
+    .max(60, "O ciclo precisa ser de no máximo 60 minutos."),
+});
+
+export const Home = () => {
+  const { register, handleSubmit, watch } = useForm({
+    resolver: zodResolver(newCycleFormValidationSchema) // passando uma configuração para resolver, que recebe o zodResolver com o schema de validações
+  });
+
+  // [...]
+
+  return (
+    <HomeContainer>
+      <form onSubmit={handleSubmit(createNewCycleHandler)}>
+        {/*[...]*/}
+      </form>
+    </HomeContainer>
+  );
+};
+```
+
+### TypeScript no Formulário com Zod
+
+- Vamos usar o Zod para facilitar a passagem de valores padrão para o form:
+
+Obs.:
+
+`Interface` x `Type`: Interface - quando criamos um tipo do zero; Type quando criamos uma tipagem a partir de outra já existente.
+
+Toda vez que precisamos utilizar uma variável JS dentro do TS precisamos converter em uma tipagem(algo específico do TS) com o `typeof`(antes dela) para que ele consiga entender.
+
+``` TSX
+import { Play } from "phosphor-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as zod from "zod";
+// [...]
+
+const newCycleFormValidationSchema = zod.object({
+  task: zod.string().min(1, "Informe a tarefa"),
+  minutesAmount: zod
+    .number()
+    .min(5, "O ciclo precisa ser de no mínimo 5 minutos.")
+    .max(60, "O ciclo precisa ser de no máximo 60 minutos."),
+});
+
+type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>; // definindo os campos do form e seus tipos a partir a inferência do zod do schema de validação(newCycleFormValidationSchema)
+
+export const Home = () => {
+  const { register, handleSubmit, watch } = useForm<NewCycleFormData>({ // passando o tipo do form
+    resolver: zodResolver(newCycleFormValidationSchema),
+    defaultValues: { // definindo valores padrão para o form
+      task: "",
+      minutesAmount: 0,
+    },
+  });
+
+  // [...]
+
+  return (
+    <HomeContainer>
+      <form onSubmit={handleSubmit(createNewCycleHandler)}>
+        {/*[...]*/}
+      </form>
+    </HomeContainer>
+  );
+};
 ```
