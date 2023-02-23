@@ -402,7 +402,7 @@ import { useForm } from "react-hook-form";
 export const Home = () => {
   const { register, handleSubmit, watch } = useForm(); // a função useForm retorna um objeto, e podemos pegar o que iremos usar(e armazenar em constantes) com o object destructuring
 
-  function createNewCycleHandler(data: any) {
+  const createNewCycleHandler = (data: any) =>  {
     console.log(data); // data retorna os dados do input = {task: 'Assistir aulas de inglês', minutesAmount: 20}
   }
 
@@ -518,7 +518,7 @@ export const Home = () => {
 
 - Vamos usar o Zod para facilitar a passagem de valores padrão para o form:
 
-Obs.:
+**Obs.:**
 
 `Interface` x `Type`: Interface - quando criamos um tipo do zero; Type quando criamos uma tipagem a partir de outra já existente.
 
@@ -549,6 +549,53 @@ export const Home = () => {
       minutesAmount: 0,
     },
   });
+
+  // [...]
+
+  return (
+    <HomeContainer>
+      <form onSubmit={handleSubmit(createNewCycleHandler)}>
+        {/*[...]*/}
+      </form>
+    </HomeContainer>
+  );
+};
+```
+
+### Resetando formulário
+
+- Vamos usar a função `reset` do `useForm` para resetar o formulário:
+
+``` TSX
+import { Play } from "phosphor-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as zod from "zod";
+// [...]
+
+const newCycleFormValidationSchema = zod.object({
+  task: zod.string().min(1, "Informe a tarefa"),
+  minutesAmount: zod
+    .number()
+    .min(5, "O ciclo precisa ser de no mínimo 5 minutos.")
+    .max(60, "O ciclo precisa ser de no máximo 60 minutos."),
+});
+
+type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>;
+
+export const Home = () => {
+  const { register, handleSubmit, watch, reset } = useForm<NewCycleFormData>({
+    resolver: zodResolver(newCycleFormValidationSchema),
+    defaultValues: {
+      task: "",
+      minutesAmount: 0,
+    },
+  });
+
+  const createNewCycleHandler = (data: any) => {
+    console.log(data);
+    reset();
+  }
 
   // [...]
 

@@ -23,7 +23,7 @@ const newCycleFormValidationSchema = zod.object({
 type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>;
 
 export const Home = () => {
-  const { register, handleSubmit, watch } = useForm<NewCycleFormData>({
+  const { register, handleSubmit, watch, reset } = useForm<NewCycleFormData>({
     resolver: zodResolver(newCycleFormValidationSchema),
     defaultValues: {
       task: "",
@@ -31,8 +31,9 @@ export const Home = () => {
     },
   }); // a função useForm retorna um objeto, e podemos pegar o que iremos usar(e armazenar em constantes) com o object destructuring
 
-  function createNewCycleHandler(data: any) {
+  const createNewCycleHandler = (data: any) => {
     console.log(data); // data retorna os dados do input = {task: 'Assistir aulas de inglês', minutesAmount: 20}
+    reset();
   }
 
   const task = watch("task"); // watch fica observando as alteções em task
