@@ -34,7 +34,7 @@ export const Home = () => {
   const createNewCycleHandler = (data: any) => {
     console.log(data); // data retorna os dados do input = {task: 'Assistir aulas de inglês', minutesAmount: 20}
     reset();
-  }
+  };
 
   const task = watch("task"); // watch fica observando as alteções em task
   const isSubmitDisable = !task; // variável auxiliar para armazer um valor booleano, se task existe(não é null)
