@@ -402,7 +402,7 @@ import { useForm } from "react-hook-form";
 export const Home = () => {
   const { register, handleSubmit, watch } = useForm(); // a função useForm retorna um objeto, e podemos pegar o que iremos usar(e armazenar em constantes) com o object destructuring
 
-  function handleCreateNewCycle(data: any) {
+  function createNewCycleHandler(data: any) {
     console.log(data); // data retorna os dados do input = {task: 'Assistir aulas de inglês', minutesAmount: 20}
   }
 
@@ -411,7 +411,7 @@ export const Home = () => {
 
   return (
     <HomeContainer>
-      <form onSubmit={handleSubmit(handleCreateNewCycle)}>
+      <form onSubmit={handleSubmit(createNewCycleHandler)}>
         <FormContainer>
           <label htmlFor="task">Vou trabalhar em</label>
           <TaskInput
@@ -468,4 +468,20 @@ export const Home = () => {
     </HomeContainer>
   );
 };
+```
+
+### Biblioteca de validação de forms - Zod
+
+Documentação: https://github.com/colinhacks/zod.
+
+- Vamos rodar o comando seguinte para integrar o Zod ao React Hook Form:
+
+```
+npm i @hookform/resolvers
+```
+
+- Usando o Zod intregado ao React Hook Form para validar forms:
+
+``` TSX
+
 ```

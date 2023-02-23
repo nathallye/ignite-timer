@@ -88,7 +88,7 @@ export const Separator = styled.div`
   width: 4rem;
   padding: 2rem 0;
 
-  color: ${(props) => props.theme["gray-500"]};
+  color: ${(props) => props.theme["green-500"]};
 
   overflow: hidden;
 `;
