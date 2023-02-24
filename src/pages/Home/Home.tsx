@@ -12,7 +12,6 @@ import {
   StartCountdownButton,
   TaskInput,
 } from "./styles";
-import { string } from "zod";
 
 const newCycleFormValidationSchema = zod.object({
   task: zod.string().min(1, "Informe a tarefa"),
@@ -33,6 +32,7 @@ interface Cycle {
 export const Home = () => {
   const [cycles, setCycles] = useState<Cycle[]>([]);
   const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
+  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0);
 
   const { register, handleSubmit, watch, reset } = useForm<NewCycleFormData>({
     resolver: zodResolver(newCycleFormValidationSchema),
@@ -51,7 +51,7 @@ export const Home = () => {
       minutesAmount: data.minutesAmount,
     };
 
-    // toda vez qua alteramos o estado e esse estado depende da sua versao anterior(antes de alterar),
+    // toda vez qua alteramos o estado e esse estado depende da sua versão anterior(antes de alterar),
     // é mais seguro setarmos o valor de estado em formato de função, onde pegamos o estado atual(state), copiamos e por fim adicionamos a nova informação
     setCycles((state) => [...state, newCycle]);
     setActiveCycleId(id); // setamos o id do ciclo atual no estado activeCycleId
@@ -60,6 +60,15 @@ export const Home = () => {
   };
 
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
+
+  const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0; // se tiver um ciclo ativo, iremos converter o tempo em segundos
+  const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0; // se tiver um ciclo ativo, iremos subtrair do total de segundos do ciclos a quantidade de segundos que se passaram
+
+  const minutesAmount = Math.floor(currentSeconds / 60); // convertendo a quantidade de segundos restantes para minutos, para mostrar em tela
+  const secondsAmount = currentSeconds % 60; // pegando a quantidade de segundos que sobram na conversão para minutos
+
+  const minutes = String(minutesAmount).padStart(2, "0"); // convertendo os minutos em string para usarmos o método padStart para informar que quando não tivermos 2 caracteres, iremos incluir um 0 na frente
+  const seconds = String(secondsAmount).padStart(2, "0"); // convertendo os segundos em string para usarmos o método padStart para informar que quando não tivermos 2 caracteres, iremos incluir um 0 na frente
 
   const task = watch("task"); // watch fica observando as alteções em task
   const isSubmitDisable = !task; // variável auxiliar para armazer um valor booleano, se task existe(não é null)
@@ -100,11 +109,11 @@ export const Home = () => {
         </FormContainer>
 
         <CountdownContainer>
-          <span>0</span>
-          <span>0</span>
+          <span>{minutes[0]}</span>
+          <span>{minutes[1]}</span>
           <Separator>:</Separator>
-          <span>0</span>
-          <span>0</span>
+          <span>{seconds[0]}</span>
+          <span>{seconds[1]}</span>
         </CountdownContainer>
 
         <StartCountdownButton disabled={isSubmitDisable} type="submit">

@@ -666,3 +666,85 @@ export const Home = () => {
   );
 };
 ```
+
+### Criando o Countdown
+
+- Alterações no Home.tsx:
+
+``` TSX
+import { useState } from "react";
+// [...]
+
+type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>;
+
+interface Cycle {
+  id: string;
+  task: string;
+  minutesAmount: number;
+}
+
+export const Home = () => {
+  const [cycles, setCycles] = useState<Cycle[]>([]);
+  const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
+  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0);
+
+  const { register, handleSubmit, watch, reset } = useForm<NewCycleFormData>({
+    resolver: zodResolver(newCycleFormValidationSchema),
+    defaultValues: {
+      task: "",
+      minutesAmount: 0,
+    },
+  });
+
+  const createNewCycleHandler = (data: NewCycleFormData) => {
+    const id = String(new Date().getTime());
+
+    const newCycle: Cycle = {
+      id: id,
+      task: data.task,
+      minutesAmount: data.minutesAmount,
+    };
+
+    setCycles((state) => [...state, newCycle]);
+    setActiveCycleId(id);
+
+    reset();
+  };
+
+  const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
+
+  const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0; // se tiver um ciclo ativo, iremos converter o tempo em segundos
+  const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0; // se tiver um ciclo ativo, iremos subtrair do total de segundos do ciclos a quantidade de segundos que se passaram
+
+  const minutesAmount = Math.floor(currentSeconds / 60); // convertendo a quantidade de segundos restantes para minutos, para mostrar em tela
+  const secondsAmount = currentSeconds % 60; // pegando a quantidade de segundos que sobram na conversão para minutos
+
+  const minutes = String(minutesAmount).padStart(2, "0"); // convertendo os minutos em string para usarmos o método padStart para informar que quando não tivermos 2 caracteres, iremos incluir um 0 na frente
+  const seconds = String(secondsAmount).padStart(2, "0"); // convertendo os segundos em string para usarmos o método padStart para informar que quando não tivermos 2 caracteres, iremos incluir um 0 na frente
+
+  // [...]
+
+  return (
+    <HomeContainer>
+      <form onSubmit={handleSubmit(createNewCycleHandler)}>
+        <FormContainer>
+          {/**/}
+        </FormContainer>
+
+        <CountdownContainer>
+          <span>{minutes[0]}</span>
+          <span>{minutes[1]}</span>
+          <Separator>:</Separator>
+          <span>{seconds[0]}</span>
+          <span>{seconds[1]}</span>
+        </CountdownContainer>
+
+        <StartCountdownButton disabled={isSubmitDisable} type="submit">
+          <Play size={24} />
+          Começar
+        </StartCountdownButton>
+      </form>
+    </HomeContainer>
+  );
+};
+```
