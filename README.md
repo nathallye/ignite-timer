@@ -608,3 +608,61 @@ export const Home = () => {
   );
 };
 ```
+
+## Funcionalidades da aplicação
+
+### Iniciando um novo ciclo
+
+- Alterações no Home.tsx:
+
+``` TSX
+import { useState } from "react";
+// [...]
+
+type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>;
+
+interface Cycle {
+  id: string;
+  task: string;
+  minutesAmount: number;
+}
+
+export const Home = () => {
+  const [cycles, setCycles] = useState<Cycle[]>([]);
+  const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
+
+  // [...]
+
+  const createNewCycleHandler = (data: NewCycleFormData) => {
+    const id = String(new Date().getTime());
+
+    const newCycle: Cycle = {
+      id: id,
+      task: data.task,
+      minutesAmount: data.minutesAmount,
+    };
+
+    // toda vez qua alteramos o estado e esse estado depende da sua versao anterior(antes de alterar),
+    // é mais seguro setarmos o valor de estado em formato de função, onde pegamos o estado atual(state), copiamos e por fim adicionamos a nova informação
+    setCycles((state) => [...state, newCycle]);
+    setActiveCycleId(id); // setamos o id do ciclo atual no estado activeCycleId
+
+    reset();
+  };
+
+  const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
+
+  // [...]
+
+  console.log(activeCycle);
+
+  return (
+    <HomeContainer>
+      <form onSubmit={handleSubmit(createNewCycleHandler)}>
+        <FormContainer>
+          {/*[...]*/}
+      </form>
+    </HomeContainer>
+  );
+};
+```

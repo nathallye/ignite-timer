@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Play } from "phosphor-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,6 +12,7 @@ import {
   StartCountdownButton,
   TaskInput,
 } from "./styles";
+import { string } from "zod";
 
 const newCycleFormValidationSchema = zod.object({
   task: zod.string().min(1, "Informe a tarefa"),
@@ -22,7 +24,16 @@ const newCycleFormValidationSchema = zod.object({
 
 type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>;
 
+interface Cycle {
+  id: string;
+  task: string;
+  minutesAmount: number;
+}
+
 export const Home = () => {
+  const [cycles, setCycles] = useState<Cycle[]>([]);
+  const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
+
   const { register, handleSubmit, watch, reset } = useForm<NewCycleFormData>({
     resolver: zodResolver(newCycleFormValidationSchema),
     defaultValues: {
@@ -31,13 +42,29 @@ export const Home = () => {
     },
   }); // a função useForm retorna um objeto, e podemos pegar o que iremos usar(e armazenar em constantes) com o object destructuring
 
-  const createNewCycleHandler = (data: any) => {
-    console.log(data); // data retorna os dados do input = {task: 'Assistir aulas de inglês', minutesAmount: 20}
+  const createNewCycleHandler = (data: NewCycleFormData) => {
+    const id = String(new Date().getTime());
+
+    const newCycle: Cycle = {
+      id: id,
+      task: data.task,
+      minutesAmount: data.minutesAmount,
+    };
+
+    // toda vez qua alteramos o estado e esse estado depende da sua versao anterior(antes de alterar),
+    // é mais seguro setarmos o valor de estado em formato de função, onde pegamos o estado atual(state), copiamos e por fim adicionamos a nova informação
+    setCycles((state) => [...state, newCycle]);
+    setActiveCycleId(id); // setamos o id do ciclo atual no estado activeCycleId
+
     reset();
   };
 
+  const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
+
   const task = watch("task"); // watch fica observando as alteções em task
   const isSubmitDisable = !task; // variável auxiliar para armazer um valor booleano, se task existe(não é null)
+
+  console.log(activeCycle);
 
   return (
     <HomeContainer>
