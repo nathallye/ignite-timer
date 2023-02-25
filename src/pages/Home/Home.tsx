@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Play } from "phosphor-react";
+import { HandPalm, Play } from "phosphor-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as zod from "zod";
@@ -11,6 +11,7 @@ import {
   MinutesAmountInput,
   Separator,
   StartCountdownButton,
+  StopCountdownButton,
   TaskInput,
 } from "./styles";
 
@@ -29,6 +30,7 @@ interface Cycle {
   task: string;
   minutesAmount: number;
   startDate: Date;
+  interruptedDate?: Date;
 }
 
 export const Home = () => {
@@ -49,8 +51,10 @@ export const Home = () => {
   useEffect(() => {
     let interval: number; // criando a variável interval
 
-    if (activeCycle) { // se existir um ciclo ativo
-      interval = setInterval(() => { // atribuindo o intervalo da função set interval a variável interval
+    if (activeCycle) {
+      // se existir um ciclo ativo
+      interval = setInterval(() => {
+        // atribuindo o intervalo da função set interval a variável interval
         setAmountSecondsPassed(
           differenceInSeconds(new Date(), activeCycle.startDate) // calcula a diferença em segundos entre a data atual e a data que o ciclo começou
         );
@@ -81,6 +85,23 @@ export const Home = () => {
     reset();
   };
 
+  const interruptCycleHandler = () => {
+    setCycles(
+      // ao interromper um ciclo, será chamada a função que altera o estado dos ciclos(setCycles)
+      cycles.map((cycle) => {
+        // irá ercorrer todos os ciclos
+        if (cycle.id === activeCycleId) {
+          // e verifica cada ciclo, se ele está ativo(é igual a activeCycleId)
+          return { ...cycle, interruptedDate: new Date() }; // se verdadeiro, retorna todos os dados do ciclo, adicionando a data de interrupção dele
+        } else {
+          // se não, só retorna a ciclo sem alterações
+          return cycle;
+        }
+      })
+    );
+    setActiveCycleId(null); // por fim, muda o estado da variável que armazena o id do ciclo ativo para null
+  };
+
   //const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
 
   const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0; // se tiver um ciclo ativo, iremos converter o tempo em segundos
@@ -96,7 +117,8 @@ export const Home = () => {
   const isSubmitDisable = !task; // variável auxiliar para armazer um valor booleano, se task existe(não é null)
 
   useEffect(() => {
-    if (activeCycle) { // se existir um ciclo ativo
+    if (activeCycle) {
+      // se existir um ciclo ativo
       document.title = `${minutes}:${seconds}`; // iremos alterar o título da página para aquantidade de minutos e segundos restantes
     }
   }, [minutes, seconds, activeCycle]); // sempre que os minutos, segundos, e o ciclo mudarem
@@ -110,11 +132,11 @@ export const Home = () => {
             id="task"
             list="task-suggestions"
             placeholder="Dê um nome para o seu projeto"
+            disabled={!!activeCycle}
             {...register("task")}
-          />{" "}
+          />
           {/*O operador spreed pega todas as informações que o register possui e passa para o TaskInput*/}
           <datalist id="task-suggestions">
-            {" "}
             {/* lista de opções para o input*/}
             <option value="Trabalhar" />
             <option value="Assistir aulas de inglês" />
@@ -128,8 +150,9 @@ export const Home = () => {
             step={5}
             min={5}
             max={60}
+            disabled={!!activeCycle}
             {...register("minutesAmount", { valueAsNumber: true })}
-          />{" "}
+          />
           {/*O operador spreed pega todas as informações que o register possui e passa para o MinutesAmountInput*/}
           <span>minutos.</span>
         </FormContainer>
@@ -142,10 +165,17 @@ export const Home = () => {
           <span>{seconds[1]}</span>
         </CountdownContainer>
 
-        <StartCountdownButton disabled={isSubmitDisable} type="submit">
-          <Play size={24} />
-          Começar
-        </StartCountdownButton>
+        {activeCycle ? (
+          <StopCountdownButton onClick={interruptCycleHandler} type="button">
+            <HandPalm size={24} />
+            Interromper
+          </StopCountdownButton>
+        ) : (
+          <StartCountdownButton disabled={isSubmitDisable} type="submit">
+            <Play size={24} />
+            Começar
+          </StartCountdownButton>
+        )}
       </form>
     </HomeContainer>
   );

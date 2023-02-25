@@ -431,7 +431,6 @@ export const Home = () => {
           />
 
           <datalist id="task-suggestions">
-            {" "}
             {/* lista de opções para o input*/}
             <option value="Trabalhar" />
             <option value="Assistir aulas de inglês" />
@@ -934,6 +933,91 @@ export const Home = () => {
     <HomeContainer>
       <form onSubmit={handleSubmit(createNewCycleHandler)}>
         {/*[...]*/}
+      </form>
+    </HomeContainer>
+  );
+};
+```
+
+### Interromper ciclo
+
+- Alterações no Home.tsx:
+
+``` TSX
+import { useEffect, useState } from "react";
+import { HandPalm, Play } from "phosphor-react";
+// [...]
+
+interface Cycle {
+  id: string;
+  task: string;
+  minutesAmount: number;
+  startDate: Date;
+  interruptedDate?: Date;
+}
+
+export const Home = () => {
+  // [...]
+
+  const interruptCycleHandler = () => {
+    setCycles( // ao interromper um ciclo, será chamada a função que altera o estado dos ciclos(setCycles)
+      cycles.map((cycle) => { // irá ercorrer todos os ciclos
+        if (cycle.id === activeCycleId) { // e verifica cada ciclo, se ele está ativo(é igual a activeCycleId)
+          return { ...cycle, interruptedDate: new Date() }; // se verdadeiro, retorna todos os dados do ciclo, adicionando a data de interrupção dele
+        } else { // se não, só retorna a ciclo sem alterações
+          return cycle;
+        }
+      })
+    );
+    setActiveCycleId(null); // por fim, muda o estado da variável que armazena o id do ciclo ativo para null
+  };
+
+  // [...]
+
+  return (
+    <HomeContainer>
+      <form onSubmit={handleSubmit(createNewCycleHandler)}>
+        <FormContainer>
+          <label htmlFor="task">Vou trabalhar em</label>
+          <TaskInput
+            id="task"
+            list="task-suggestions"
+            placeholder="Dê um nome para o seu projeto"
+            disabled={!!activeCycle} /*se activeCycle for verdadeiro, irá desabilitar o input*/}
+            {...register("task")}
+          />
+          <datalist id="task-suggestions">
+            <option value="Trabalhar" />
+            <option value="Assistir aulas de inglês" />
+            <option value="Assistir aulas de react" />
+          </datalist>
+          <label htmlFor="minutesAmount">durante</label>
+          <MinutesAmountInput
+            type="number"
+            id="minutesAmount"
+            placeholder="00"
+            step={5}
+            min={5}
+            max={60}
+            disabled={!!activeCycle} {/*se activeCycle for verdadeiro, irá desabilitar o input*/}
+            {...register("minutesAmount", { valueAsNumber: true })}
+          />
+          <span>minutos.</span>
+        </FormContainer>
+
+        {/*[...]*/}
+
+        {activeCycle ? ( {/*se o ciclo estiver ativo*/}
+          <StopCountdownButton onClick={interruptCycleHandler} type="button"> {/*renderiza o butão de Interromper*/}
+            <HandPalm size={24} />
+            Interromper
+          </StopCountdownButton>
+        ) : (  {/*se não, renderiza o butão de Começar*/}
+          <StartCountdownButton disabled={isSubmitDisable} type="submit">
+            <Play size={24} />
+            Começar
+          </StartCountdownButton>
+        )}
       </form>
     </HomeContainer>
   );
