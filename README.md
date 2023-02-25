@@ -474,9 +474,10 @@ export const Home = () => {
 
 Documentação: https://github.com/colinhacks/zod.
 
-- Vamos rodar o comando seguinte para integrar o Zod ao React Hook Form:
+- Vamos rodar o comando seguinte para instalar e integrar o Zod ao React Hook Form:
 
 ```
+npm i zod
 npm i @hookform/resolvers
 ```
 
@@ -728,7 +729,7 @@ export const Home = () => {
     <HomeContainer>
       <form onSubmit={handleSubmit(createNewCycleHandler)}>
         <FormContainer>
-          {/**/}
+          {/*[...]*/}
         </FormContainer>
 
         <CountdownContainer>
@@ -749,7 +750,7 @@ export const Home = () => {
 };
 ```
 
-## useEffect
+### useEffect
 
 Permite executar efeitos colaterais em componentes funcionais!
 
@@ -763,3 +764,93 @@ useEffect(() => { // function callback, que será chamada sempre que o(s) valor(
 ```
 
 Quando não passamos nenhuma dependência para o *useEffect*, ele será renderizado uma única vez na criação do componente, podemos ser usado para realizar uma chamada para uma API por exemplo.
+
+
+### Reduzindo o Countdown
+
+- Para calcular a diferença entre duas datas em segundos, iremos baixar a biblioteca `date-fns` com o comando seguinteÇ
+
+```
+npm i date-fns
+```
+
+- Alterações no Home.tsx:
+
+``` TSX
+import { useEffect, useState } from "react";
+import { Play } from "phosphor-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as zod from "zod";
+import { differenceInSeconds } from "date-fns";
+// [...]
+
+const newCycleFormValidationSchema = zod.object({
+  task: zod.string().min(1, "Informe a tarefa"),
+  minutesAmount: zod
+    .number()
+    .min(5, "O ciclo precisa ser de no mínimo 5 minutos.")
+    .max(60, "O ciclo precisa ser de no máximo 60 minutos."),
+});
+
+type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>;
+
+interface Cycle {
+  id: string;
+  task: string;
+  minutesAmount: number;
+  startDate: Date;
+}
+
+export const Home = () => {
+  const [cycles, setCycles] = useState<Cycle[]>([]);
+  const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
+  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0);
+
+  const { register, handleSubmit, watch, reset } = useForm<NewCycleFormData>({
+    resolver: zodResolver(newCycleFormValidationSchema),
+    defaultValues: {
+      task: "",
+      minutesAmount: 0,
+    },
+  });
+
+  const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
+
+  useEffect(() => {
+    if (activeCycle) { // se existir um ciclo ativo
+      setInterval(() => {
+        setAmountSecondsPassed(
+          differenceInSeconds(new Date(), activeCycle.startDate), // calcula a diferença em segundos entre a data atual e a data que o ciclo começou
+        )
+      }, 1000); // a cada 1 segundo será calculado e setado um novo estado para amountSecondsPassed(setAmountSecondsPassed)
+    }
+  }, [activeCycle]); // toda vez que o estado de activeCycle for alterado, o useEffect será chamado
+
+  const createNewCycleHandler = (data: NewCycleFormData) => {
+    const id = String(new Date().getTime());
+
+    const newCycle: Cycle = {
+      id: id,
+      task: data.task,
+      minutesAmount: data.minutesAmount,
+      startDate: new Date(),
+    };
+
+    setCycles((state) => [...state, newCycle]);
+    setActiveCycleId(id);
+
+    reset();
+  };
+
+  // [...]
+
+  return (
+    <HomeContainer>
+      <form onSubmit={handleSubmit(createNewCycleHandler)}>
+        {/*[...]*/}
+      </form>
+    </HomeContainer>
+  );
+};
+```

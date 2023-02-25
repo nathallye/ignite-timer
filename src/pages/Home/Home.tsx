@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Play } from "phosphor-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as zod from "zod";
+import { differenceInSeconds } from "date-fns";
 import {
   CountdownContainer,
   FormContainer,
@@ -27,6 +28,7 @@ interface Cycle {
   id: string;
   task: string;
   minutesAmount: number;
+  startDate: Date;
 }
 
 export const Home = () => {
@@ -42,6 +44,19 @@ export const Home = () => {
     },
   }); // a função useForm retorna um objeto, e podemos pegar o que iremos usar(e armazenar em constantes) com o object destructuring
 
+  const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
+
+  useEffect(() => {
+    if (activeCycle) {
+      // se existir um ciclo ativo
+      setInterval(() => {
+        setAmountSecondsPassed(
+          differenceInSeconds(new Date(), activeCycle.startDate) // calcula a diferença em segundos entre a data atual e a data que o ciclo começou
+        );
+      }, 1000); // a cada 1 segundo será calculado e setado um novo estado para amountSecondsPassed(setAmountSecondsPassed)
+    }
+  }, [activeCycle]); // toda vez que o estado de activeCycle for alterado, o useEffect será chamado
+
   const createNewCycleHandler = (data: NewCycleFormData) => {
     const id = String(new Date().getTime());
 
@@ -49,6 +64,7 @@ export const Home = () => {
       id: id,
       task: data.task,
       minutesAmount: data.minutesAmount,
+      startDate: new Date(),
     };
 
     // toda vez qua alteramos o estado e esse estado depende da sua versão anterior(antes de alterar),
@@ -59,7 +75,7 @@ export const Home = () => {
     reset();
   };
 
-  const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
+  //const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
 
   const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0; // se tiver um ciclo ativo, iremos converter o tempo em segundos
   const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0; // se tiver um ciclo ativo, iremos subtrair do total de segundos do ciclos a quantidade de segundos que se passaram
@@ -73,7 +89,7 @@ export const Home = () => {
   const task = watch("task"); // watch fica observando as alteções em task
   const isSubmitDisable = !task; // variável auxiliar para armazer um valor booleano, se task existe(não é null)
 
-  console.log(activeCycle);
+  //console.log(activeCycle);
 
   return (
     <HomeContainer>
