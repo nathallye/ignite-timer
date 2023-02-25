@@ -47,14 +47,21 @@ export const Home = () => {
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
 
   useEffect(() => {
+    let interval: number; // criando a variável interval
+
     if (activeCycle) {
       // se existir um ciclo ativo
-      setInterval(() => {
+      interval = setInterval(() => {
+        // atribuindo o intervalo da função set interval a variável interval
         setAmountSecondsPassed(
           differenceInSeconds(new Date(), activeCycle.startDate) // calcula a diferença em segundos entre a data atual e a data que o ciclo começou
         );
       }, 1000); // a cada 1 segundo será calculado e setado um novo estado para amountSecondsPassed(setAmountSecondsPassed)
     }
+
+    return () => {
+      clearInterval(interval); // quando o useEffect é chamado novamente, a variável interval é limpa
+    };
   }, [activeCycle]); // toda vez que o estado de activeCycle for alterado, o useEffect será chamado
 
   const createNewCycleHandler = (data: NewCycleFormData) => {
@@ -71,6 +78,7 @@ export const Home = () => {
     // é mais seguro setarmos o valor de estado em formato de função, onde pegamos o estado atual(state), copiamos e por fim adicionamos a nova informação
     setCycles((state) => [...state, newCycle]);
     setActiveCycleId(id); // setamos o id do ciclo atual no estado activeCycleId
+    setAmountSecondsPassed(0); // zeramos o contador de quantos segundos já se passaram
 
     reset();
   };

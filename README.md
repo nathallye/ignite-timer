@@ -646,7 +646,7 @@ export const Home = () => {
     // toda vez qua alteramos o estado e esse estado depende da sua versao anterior(antes de alterar),
     // é mais seguro setarmos o valor de estado em formato de função, onde pegamos o estado atual(state), copiamos e por fim adicionamos a nova informação
     setCycles((state) => [...state, newCycle]);
-    setActiveCycleId(id); // setamos o id do ciclo atual no estado activeCycleId
+    setActiveCycleId(id); // toda vez que um novo ciclo for criado, setamos o id do ciclo atual no estado activeCycleId
 
     reset();
   };
@@ -768,7 +768,7 @@ Quando não passamos nenhuma dependência para o *useEffect*, ele será renderiz
 
 ### Reduzindo o Countdown
 
-- Para calcular a diferença entre duas datas em segundos, iremos baixar a biblioteca `date-fns` com o comando seguinteÇ
+- Para calcular a diferença entre duas datas em segundos, iremos baixar a biblioteca `date-fns` com o comando seguintes:
 
 ```
 npm i date-fns
@@ -854,3 +854,97 @@ export const Home = () => {
   );
 };
 ```
+
+### Resolvendo bugs no Countdown - useEffect
+
+- Alterações no Home.tsx:
+
+``` TSX
+import { useEffect, useState } from "react";
+import { Play } from "phosphor-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as zod from "zod";
+import { differenceInSeconds } from "date-fns";
+// [...]
+
+const newCycleFormValidationSchema = zod.object({
+  task: zod.string().min(1, "Informe a tarefa"),
+  minutesAmount: zod
+    .number()
+    .min(5, "O ciclo precisa ser de no mínimo 5 minutos.")
+    .max(60, "O ciclo precisa ser de no máximo 60 minutos."),
+});
+
+type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>;
+
+interface Cycle {
+  id: string;
+  task: string;
+  minutesAmount: number;
+  startDate: Date;
+}
+
+export const Home = () => {
+  const [cycles, setCycles] = useState<Cycle[]>([]);
+  const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
+  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0);
+
+  const { register, handleSubmit, watch, reset } = useForm<NewCycleFormData>({
+    resolver: zodResolver(newCycleFormValidationSchema),
+    defaultValues: {
+      task: "",
+      minutesAmount: 0,
+    },
+  });
+
+  const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
+
+  useEffect(() => {
+    let interval: number; // criando a variável interval
+
+    if (activeCycle) {
+      // se existir um ciclo ativo
+      interval = setInterval(() => {
+        // atribuindo o intervalo da função set interval a variável interval
+        setAmountSecondsPassed(
+          differenceInSeconds(new Date(), activeCycle.startDate) // calcula a diferença em segundos entre a data atual e a data que o ciclo começou
+        );
+      }, 1000); // a cada 1 segundo será calculado e setado um novo estado para amountSecondsPassed(setAmountSecondsPassed)
+    }
+
+    return () => {
+      clearInterval(interval); // quando o useEffect é chamado novamente, a variável interval é limpa
+    };
+  }, [activeCycle]); // toda vez que o estado de activeCycle for alterado, o useEffect será chamado
+
+  const createNewCycleHandler = (data: NewCycleFormData) => {
+    const id = String(new Date().getTime());
+
+    const newCycle: Cycle = {
+      id: id,
+      task: data.task,
+      minutesAmount: data.minutesAmount,
+      startDate: new Date(),
+    };
+
+    setCycles((state) => [...state, newCycle]);
+    setActiveCycleId(id);
+    setAmountSecondsPassed(0); // toda vez que um novo ciclo for criado, zeramos o contador de quantos segundos já se passaram
+
+    reset();
+  };
+
+  // [...]
+
+  return (
+    <HomeContainer>
+      <form onSubmit={handleSubmit(createNewCycleHandler)}>
+        {/*[...]*/}
+      </form>
+    </HomeContainer>
+  );
+};
+```
+
+### Mudando o title da página
