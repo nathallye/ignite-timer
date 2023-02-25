@@ -748,3 +748,18 @@ export const Home = () => {
   );
 };
 ```
+
+## useEffect
+
+Permite executar efeitos colaterais em componentes funcionais!
+
+Esse hook recebe dois parâmetros, o primeiro vai ser o que ele chama de *EffectCallback*, que nada mais é que uma função que será chamada quando ele for gerar esse "efeito colateral" e o segundo parâmetro(opcional) é a lista de dependências que ele chama de *DependencyList*:
+
+``` TSX
+
+useEffect(() => { // function callback, que será chamada sempre que o(s) valor(es) passado no "DependencyList" (segundo parametro passado para a função) modificar
+  // EffectCallback
+}, []) // DependencyList
+```
+
+Quando nao passamos nenhuma dependencia para o *useEffect*, ele sera renderizado uma unica vez na criacao do componente, podemos ser usado para realizar uma chamada para uma API por exemplo.
