@@ -861,52 +861,18 @@ export const Home = () => {
 
 ``` TSX
 import { useEffect, useState } from "react";
-import { Play } from "phosphor-react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as zod from "zod";
-import { differenceInSeconds } from "date-fns";
 // [...]
 
-const newCycleFormValidationSchema = zod.object({
-  task: zod.string().min(1, "Informe a tarefa"),
-  minutesAmount: zod
-    .number()
-    .min(5, "O ciclo precisa ser de no mínimo 5 minutos.")
-    .max(60, "O ciclo precisa ser de no máximo 60 minutos."),
-});
-
-type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>;
-
-interface Cycle {
-  id: string;
-  task: string;
-  minutesAmount: number;
-  startDate: Date;
-}
-
 export const Home = () => {
-  const [cycles, setCycles] = useState<Cycle[]>([]);
-  const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
-  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0);
-
-  const { register, handleSubmit, watch, reset } = useForm<NewCycleFormData>({
-    resolver: zodResolver(newCycleFormValidationSchema),
-    defaultValues: {
-      task: "",
-      minutesAmount: 0,
-    },
-  });
+  // [...]
 
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
 
   useEffect(() => {
     let interval: number; // criando a variável interval
 
-    if (activeCycle) {
-      // se existir um ciclo ativo
-      interval = setInterval(() => {
-        // atribuindo o intervalo da função set interval a variável interval
+    if (activeCycle) { // se existir um ciclo ativo
+      interval = setInterval(() => { // atribuindo o intervalo da função set interval a variável interval
         setAmountSecondsPassed(
           differenceInSeconds(new Date(), activeCycle.startDate) // calcula a diferença em segundos entre a data atual e a data que o ciclo começou
         );
@@ -948,3 +914,28 @@ export const Home = () => {
 ```
 
 ### Mudando o title da página
+
+- Alterações no Home.tsx:
+
+``` TSX
+import { useEffect, useState } from "react";
+// [...]
+
+export const Home = () => {
+  // [...]
+
+  useEffect(() => {
+    if (activeCycle) { // se existir um ciclo ativo
+      document.title = `${minutes}:${seconds}`; // iremos alterar o título da página para aquantidade de minutos e segundos restantes
+    }
+  }, [minutes, seconds, activeCycle]); // sempre que os minutos, segundos, e o ciclo mudarem
+
+  return (
+    <HomeContainer>
+      <form onSubmit={handleSubmit(createNewCycleHandler)}>
+        {/*[...]*/}
+      </form>
+    </HomeContainer>
+  );
+};
+```

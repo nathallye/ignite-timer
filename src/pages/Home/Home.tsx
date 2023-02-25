@@ -49,10 +49,8 @@ export const Home = () => {
   useEffect(() => {
     let interval: number; // criando a variável interval
 
-    if (activeCycle) {
-      // se existir um ciclo ativo
-      interval = setInterval(() => {
-        // atribuindo o intervalo da função set interval a variável interval
+    if (activeCycle) { // se existir um ciclo ativo
+      interval = setInterval(() => { // atribuindo o intervalo da função set interval a variável interval
         setAmountSecondsPassed(
           differenceInSeconds(new Date(), activeCycle.startDate) // calcula a diferença em segundos entre a data atual e a data que o ciclo começou
         );
@@ -97,7 +95,11 @@ export const Home = () => {
   const task = watch("task"); // watch fica observando as alteções em task
   const isSubmitDisable = !task; // variável auxiliar para armazer um valor booleano, se task existe(não é null)
 
-  //console.log(activeCycle);
+  useEffect(() => {
+    if (activeCycle) { // se existir um ciclo ativo
+      document.title = `${minutes}:${seconds}`; // iremos alterar o título da página para aquantidade de minutos e segundos restantes
+    }
+  }, [minutes, seconds, activeCycle]); // sempre que os minutos, segundos, e o ciclo mudarem
 
   return (
     <HomeContainer>
