@@ -51,10 +51,8 @@ export const Home = () => {
   useEffect(() => {
     let interval: number; // criando a variável interval
 
-    if (activeCycle) {
-      // se existir um ciclo ativo
-      interval = setInterval(() => {
-        // atribuindo o intervalo da função set interval a variável interval
+    if (activeCycle) { // se existir um ciclo ativo
+      interval = setInterval(() => { // atribuindo o intervalo da função set interval a variável interval
         setAmountSecondsPassed(
           differenceInSeconds(new Date(), activeCycle.startDate) // calcula a diferença em segundos entre a data atual e a data que o ciclo começou
         );
@@ -86,15 +84,11 @@ export const Home = () => {
   };
 
   const interruptCycleHandler = () => {
-    setCycles(
-      // ao interromper um ciclo, será chamada a função que altera o estado dos ciclos(setCycles)
-      cycles.map((cycle) => {
-        // irá ercorrer todos os ciclos
-        if (cycle.id === activeCycleId) {
-          // e verifica cada ciclo, se ele está ativo(é igual a activeCycleId)
+    setCycles( // ao interromper um ciclo, será chamada a função que altera o estado dos ciclos(setCycles)
+      cycles.map((cycle) => { // irá ercorrer todos os ciclos
+        if (cycle.id === activeCycleId) { // e verifica cada ciclo, se ele está ativo(é igual a activeCycleId)
           return { ...cycle, interruptedDate: new Date() }; // se verdadeiro, retorna todos os dados do ciclo, adicionando a data de interrupção dele
-        } else {
-          // se não, só retorna a ciclo sem alterações
+        } else { // se não, só retorna a ciclo sem alterações
           return cycle;
         }
       })
