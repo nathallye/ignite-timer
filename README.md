@@ -762,4 +762,4 @@ useEffect(() => { // function callback, que será chamada sempre que o(s) valor(
 }, []) // DependencyList
 ```
 
-Quando nao passamos nenhuma dependencia para o *useEffect*, ele sera renderizado uma unica vez na criacao do componente, podemos ser usado para realizar uma chamada para uma API por exemplo.
+Quando não passamos nenhuma dependência para o *useEffect*, ele será renderizado uma única vez na criação do componente, podemos ser usado para realizar uma chamada para uma API por exemplo.
