@@ -4,15 +4,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as zod from "zod";
 import { differenceInSeconds } from "date-fns";
+import { NewCycleForm } from "./components/NewCycleForm";
+import { Countdown } from "./components/Countdown";
 import {
-  CountdownContainer,
-  FormContainer,
   HomeContainer,
-  MinutesAmountInput,
-  Separator,
   StartCountdownButton,
-  StopCountdownButton,
-  TaskInput,
+  StopCountdownButton
 } from "./styles";
 
 const newCycleFormValidationSchema = zod.object({
@@ -137,46 +134,10 @@ export const Home = () => {
 
   return (
     <HomeContainer>
+      <NewCycleForm />
+      <Countdown />
+
       <form onSubmit={handleSubmit(createNewCycleHandler)}>
-        <FormContainer>
-          <label htmlFor="task">Vou trabalhar em</label>
-          <TaskInput
-            id="task"
-            list="task-suggestions"
-            placeholder="Dê um nome para o seu projeto"
-            disabled={!!activeCycle}
-            {...register("task")}
-          />
-          {/*O operador spreed pega todas as informações que o register possui e passa para o TaskInput*/}
-          <datalist id="task-suggestions">
-            {/* lista de opções para o input*/}
-            <option value="Trabalhar" />
-            <option value="Assistir aulas de inglês" />
-            <option value="Assistir aulas de react" />
-          </datalist>
-          <label htmlFor="minutesAmount">durante</label>
-          <MinutesAmountInput
-            type="number"
-            id="minutesAmount"
-            placeholder="00"
-            step={5}
-            min={5}
-            max={60}
-            disabled={!!activeCycle}
-            {...register("minutesAmount", { valueAsNumber: true })}
-          />
-          {/*O operador spreed pega todas as informações que o register possui e passa para o MinutesAmountInput*/}
-          <span>minutos.</span>
-        </FormContainer>
-
-        <CountdownContainer>
-          <span>{minutes[0]}</span>
-          <span>{minutes[1]}</span>
-          <Separator>:</Separator>
-          <span>{seconds[0]}</span>
-          <span>{seconds[1]}</span>
-        </CountdownContainer>
-
         {activeCycle ? (
           <StopCountdownButton onClick={interruptCycleHandler} type="button">
             <HandPalm size={24} />
