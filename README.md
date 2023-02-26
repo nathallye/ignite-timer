@@ -767,7 +767,7 @@ Quando não passamos nenhuma dependência para o *useEffect*, ele será renderiz
 
 ### Reduzindo o Countdown
 
-Agora continuar o desenvolvimento do nosso countdown, criando a lógica responsável por diminuir o contador de tempo, e também adicionar uma funcionalidade que reflete o tempo restante no título da página.
+Agora continuar o desenvolvimento do nosso countdown, criando a lógica responsável por diminuir o contador de tempo.
 
 - Para calcular a diferença entre duas datas em segundos, iremos baixar a biblioteca `date-fns` com o comando seguintes:
 
@@ -915,6 +915,8 @@ export const Home = () => {
 ```
 
 ### Mudando o title da página
+
+Vamos adicionar uma funcionalidade que reflete o tempo restante no título da página.
 
 - Alterações no Home.tsx:
 
