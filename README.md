@@ -767,6 +767,8 @@ Quando não passamos nenhuma dependência para o *useEffect*, ele será renderiz
 
 ### Reduzindo o Countdown
 
+Agora continuar o desenvolvimento do nosso countdown, criando a lógica responsável por diminuir o contador de tempo, e também adicionar uma funcionalidade que reflete o tempo restante no título da página.
+
 - Para calcular a diferença entre duas datas em segundos, iremos baixar a biblioteca `date-fns` com o comando seguintes:
 
 ```
@@ -941,6 +943,8 @@ export const Home = () => {
 
 ### Interromper ciclo
 
+Vamos desenvolver a funcionalidade de interromper um ciclo para cadastrarmos um outro, e também anotar a data para manter um histórico de quando o ciclo foi interrompido.
+
 - Alterações no Home.tsx:
 
 ``` TSX
@@ -1026,6 +1030,8 @@ export const Home = () => {
 
 ### Ciclo completo
 
+Para também ter o histórico de todos os ciclos que foram completos, vamos agora desenvolver a funcionalidade que vai anotar a data de finalização de um ciclo quando ele chegar ao fim.
+
 - Alterações no Home.tsx:
 
 ``` TSX
@@ -1089,3 +1095,7 @@ export const Home = () => {
   );
 };
 ```
+
+### Separando componentes
+
+Agora vamos começar a criar uma organização melhor para o nosso projeto, para tirar toda a responsabilidade de somente da página Home e separar em diversos componentes que possuem responsabilidades diferentes.
