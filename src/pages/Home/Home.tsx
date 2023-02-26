@@ -31,6 +31,7 @@ interface Cycle {
   minutesAmount: number;
   startDate: Date;
   interruptedDate?: Date;
+  finishedDate?: Date;
 }
 
 export const Home = () => {
@@ -48,21 +49,38 @@ export const Home = () => {
 
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
 
+  const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0; // se tiver um ciclo ativo, iremos converter o tempo em segundos
+
   useEffect(() => {
     let interval: number; // criando a variável interval
 
     if (activeCycle) { // se existir um ciclo ativo
       interval = setInterval(() => { // atribuindo o intervalo da função set interval a variável interval
-        setAmountSecondsPassed(
-          differenceInSeconds(new Date(), activeCycle.startDate) // calcula a diferença em segundos entre a data atual e a data que o ciclo começou
-        );
+        const secondsDifference = differenceInSeconds(new Date(), activeCycle.startDate); // calcula a diferença em segundos entre a data atual e a data que o ciclo começou, e armazena o resultado na variável
+
+        if (secondsDifference >= totalSeconds) { // se a diferença de segundos, for maior ou igual que o total de segundos
+          setCycles((state) => // vamos informar que o ciclo foi encerrado, chamando a função que altera o estado dos ciclos(setCycles)
+            state.map((cycle) => { // irá ercorrer todos os ciclos
+              if (cycle.id === activeCycleId) {  // e verifica cada ciclo, se ele está ativo(é igual a activeCycleId)
+                return { ...cycle, finishedDate: new Date() }; // se verdadeiro, retorna todos os dados do ciclo, adicionando a data de interrupção dele
+              } else { // se não, só retorna a ciclo sem alterações
+                return cycle;
+              }
+            })
+          )
+          setAmountSecondsPassed(totalSeconds);
+          clearInterval(interval);
+
+        } else { // se a diferença de segundos, não for maior ou igual que o total de segundos
+          setAmountSecondsPassed(secondsDifference); // vamos continuar setando o valor de quantos segundos se passaram
+        }
       }, 1000); // a cada 1 segundo será calculado e setado um novo estado para amountSecondsPassed(setAmountSecondsPassed)
     }
 
     return () => {
       clearInterval(interval); // quando o useEffect é chamado novamente, a variável interval é limpa
     };
-  }, [activeCycle]); // toda vez que o estado de activeCycle for alterado, o useEffect será chamado
+  }, [activeCycle, totalSeconds, activeCycleId]); // toda vez que o estado de activeCycle for alterado, o useEffect será chamado
 
   const createNewCycleHandler = (data: NewCycleFormData) => {
     const id = String(new Date().getTime());
@@ -98,7 +116,7 @@ export const Home = () => {
 
   //const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
 
-  const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0; // se tiver um ciclo ativo, iremos converter o tempo em segundos
+  //const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0; // se tiver um ciclo ativo, iremos converter o tempo em segundos
   const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0; // se tiver um ciclo ativo, iremos subtrair do total de segundos do ciclos a quantidade de segundos que se passaram
 
   const minutesAmount = Math.floor(currentSeconds / 60); // convertendo a quantidade de segundos restantes para minutos, para mostrar em tela
