@@ -669,6 +669,8 @@ export const Home = () => {
 
 ### Criando o Countdown
 
+Agora que conseguimos tornar um ciclo em ativo, vamos criar o código responsável por calcular e exibir em tela o valor restante para finalização do ciclo.
+
 - Alterações no Home.tsx:
 
 ``` TSX
