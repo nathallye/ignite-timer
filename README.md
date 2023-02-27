@@ -1103,3 +1103,8 @@ export const Home = () => {
 ### Separando componentes
 
 Agora vamos começar a criar uma organização melhor para o nosso projeto, para tirar toda a responsabilidade de somente da página Home e separar em diversos componentes que possuem responsabilidades diferentes. Para isso, criamos os componentes `Countdown`(que ficará responsável pelo *CountdownContainer* e seu conteúdo e aplicações de estilos) e `NewCyclewForm`(que ficará responsável pelo *FormContainer* e seu conteúdo e aplicações de estilos).
+
+### Prop Drilling no React
+
+O Prop Drilling é um termo utilizado para quando temos propriedades que estão se repassando em diversas camadas da nossa árvore de componentes.
+Solução: Context API -> Permite compartilhamos informações entre vários componentes ao mesmo tempo.
