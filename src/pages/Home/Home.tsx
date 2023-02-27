@@ -22,7 +22,9 @@ interface Cycle {
 interface CyclesContextType {
   activeCycle: Cycle | undefined;
   activeCycleId: string | null;
+  amountSecondsPassed: number;
   markCurrentCycleAsFinished: () => void;
+  setAmountSecondsPassedHandler: (seconds: number) => void;
 }
 
 export const CyclesContext = createContext({} as CyclesContextType);
@@ -30,8 +32,13 @@ export const CyclesContext = createContext({} as CyclesContextType);
 export const Home = () => {
   const [cycles, setCycles] = useState<Cycle[]>([]);
   const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
+  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0);
 
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
+
+  const setAmountSecondsPassedHandler = (seconds: number) => {
+    setAmountSecondsPassed(seconds);
+  }
 
   const markCurrentCycleAsFinished = () => {
     setCycles((state) => // vamos informar que o ciclo foi encerrado, chamando a função que altera o estado dos ciclos(setCycles)
@@ -83,7 +90,12 @@ export const Home = () => {
   return (
     <HomeContainer>
       <form /*onSubmit={handleSubmit(createNewCycleHandler)}*/>
-        <CyclesContext.Provider value={{ activeCycle, activeCycleId, markCurrentCycleAsFinished }}>
+        <CyclesContext.Provider value={{
+            activeCycle,
+            activeCycleId,
+            markCurrentCycleAsFinished,
+            amountSecondsPassed,
+            setAmountSecondsPassedHandler }}>
           {/* <NewCycleForm /> */}
           <Countdown />
         </CyclesContext.Provider>

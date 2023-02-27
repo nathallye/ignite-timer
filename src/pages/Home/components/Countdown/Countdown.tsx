@@ -6,8 +6,13 @@ import { CyclesContext } from "../../Home";
 import { CountdownContainer, Separator } from "./styles";
 
 export const Countdown = () => {
-  const { activeCycle, activeCycleId, markCurrentCycleAsFinished } = useContext(CyclesContext);
-  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0);
+  const {
+    activeCycle,
+    activeCycleId,
+    markCurrentCycleAsFinished,
+    amountSecondsPassed,
+    setAmountSecondsPassedHandler
+  } = useContext(CyclesContext);
 
   const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0; // se tiver um ciclo ativo, iremos converter o tempo em segundos
 
@@ -30,11 +35,11 @@ export const Countdown = () => {
           // )
           markCurrentCycleAsFinished();
 
-          setAmountSecondsPassed(totalSeconds);
+          setAmountSecondsPassedHandler(totalSeconds);
           clearInterval(interval);
 
         } else { // se a diferença de segundos, não for maior ou igual que o total de segundos
-          setAmountSecondsPassed(secondsDifference); // vamos continuar setando o valor de quantos segundos se passaram
+          setAmountSecondsPassedHandler(secondsDifference); // vamos continuar setando o valor de quantos segundos se passaram
         }
       }, 1000); // a cada 1 segundo será calculado e setado um novo estado para amountSecondsPassed(setAmountSecondsPassed)
     }
