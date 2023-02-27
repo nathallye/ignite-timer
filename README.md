@@ -1108,3 +1108,7 @@ Agora vamos começar a criar uma organização melhor para o nosso projeto, para
 
 O Prop Drilling é um termo utilizado para quando temos propriedades que estão se repassando em diversas camadas da nossa árvore de componentes.
 Solução: Context API -> Permite compartilhamos informações entre vários componentes ao mesmo tempo.
+
+### Convertendo o Countdown para contexto
+
+
