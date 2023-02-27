@@ -28,6 +28,7 @@ export const Countdown = () => {
           //     }
           //   })
           // )
+          markCurrentCycleAsFinished();
 
           setAmountSecondsPassed(totalSeconds);
           clearInterval(interval);
