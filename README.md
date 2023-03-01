@@ -1116,3 +1116,7 @@ Solução: Context API -> Permite compartilhamos informações entre vários com
 ### Contexto entre rotas
 
 #### Reset no formulário
+
+### Listagem do histórico
+
+#### Formatação de data
