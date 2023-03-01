@@ -1112,3 +1112,6 @@ Solução: Context API -> Permite compartilhamos informações entre vários com
 ### Convertendo o Countdown para contexto
 
 ### Convertendo o NewCycleForm para contexto
+
+### Contexto entre rotas
+
