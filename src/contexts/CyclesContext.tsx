@@ -21,7 +21,7 @@ interface CyclesContextType {
   amountSecondsPassed: number;
   markCurrentCycleAsFinished: () => void;
   setAmountSecondsPassedHandler: (seconds: number) => void;
-  createNewCycleHandler: (data: CreateCycleData) => void;
+  createNewCycle: (data: CreateCycleData) => void;
   interruptCycleHandler: () => void;
 }
 
@@ -54,7 +54,7 @@ export const CyclesContextProvider = ({ children }: CyclesContextProviderProps) 
     );
   }
 
-  const createNewCycleHandler = (data: CreateCycleData) => {
+  const createNewCycle = (data: CreateCycleData) => {
     const id = String(new Date().getTime());
 
     const newCycle: Cycle = {
@@ -69,8 +69,6 @@ export const CyclesContextProvider = ({ children }: CyclesContextProviderProps) 
     setCycles((state) => [...state, newCycle]);
     setActiveCycleId(id); // setamos o id do ciclo atual no estado activeCycleId
     setAmountSecondsPassed(0); // zeramos o contador de quantos segundos já se passaram
-
-    // reset();
   };
 
   const interruptCycleHandler = () => {
@@ -95,7 +93,7 @@ export const CyclesContextProvider = ({ children }: CyclesContextProviderProps) 
         amountSecondsPassed,
         markCurrentCycleAsFinished,
         setAmountSecondsPassedHandler,
-        createNewCycleHandler,
+        createNewCycle,
         interruptCycleHandler
       }}
     >

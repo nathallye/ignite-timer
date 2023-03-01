@@ -27,7 +27,7 @@ const newCycleFormValidationSchema = zod.object({
 type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>;
 
 export const Home = () => {
-  const { activeCycle, createNewCycleHandler, interruptCycleHandler } = useContext(CyclesContext)
+  const { activeCycle, createNewCycle, interruptCycleHandler } = useContext(CyclesContext)
 
   const newCycleForm = useForm<NewCycleFormData>({
     resolver: zodResolver(newCycleFormValidationSchema),
@@ -37,7 +37,12 @@ export const Home = () => {
     },
   });
 
-  const { handleSubmit, watch, /*reset*/ } = newCycleForm; // a função useForm retorna um objeto(que foi armazenada em newCycleForm), e podemos pegar o que iremos usar(e armazenar em constantes) com o object destructuring
+  const { handleSubmit, watch, reset } = newCycleForm; // a função useForm retorna um objeto(que foi armazenada em newCycleForm), e podemos pegar o que iremos usar(e armazenar em constantes) com o object destructuring
+
+  const createNewCycleHandler = (data: NewCycleFormData) => {
+    createNewCycle(data);
+    reset();
+  }
 
   const task = watch("task"); // watch fica observando as alteções em task
   const isSubmitDisable = !task; // variável auxiliar para armazer um valor booleano, se task existe(não é null)
