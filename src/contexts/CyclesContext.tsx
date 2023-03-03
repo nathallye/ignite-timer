@@ -31,22 +31,46 @@ interface CyclesContextProviderProps {
   children: ReactNode;
 }
 
-export const CyclesContextProvider = ({ children }: CyclesContextProviderProps) => {
-  const [cycles, dispatch] = useReducer((state: Cycle[], action: any) => {
-    console.log(state);
-    console.log(action);
+interface CyclesState {
+  cycles: Cycle[];
+  activeCycleId: string | null;
+}
 
+export const CyclesContextProvider = ({ children }: CyclesContextProviderProps) => {
+  const [cyclesState, dispatch] = useReducer((state: CyclesState, action: any) => {
     if (action.type === 'ADD_NEW_CYCLE') {
-      return [...state, action.payload.newCycle];
+      return {
+        ...state,
+        cycles: [...state.cycles, action.payload.newCycle],
+        activeCycleId: action.payload.newCycle.id
+      }
+    }
+
+    if (action.type === 'INTERRUPT_CURRENT_CYCLE') {
+      return {
+        ...state,
+        cycles: state.cycles.map((cycle) => {
+          if (cycle.id === state.activeCycleId) {
+            return { ...cycle, interruptedDate: new Date() };
+          } else {
+            return cycle;
+          }
+        }),
+        activeCycleId: null
+      }
     }
 
     return state;
-  }, []);
+  },
+  {
+    cycles: [],
+    activeCycleId: null
+  });
 
 
-  const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
   const [amountSecondsPassed, setAmountSecondsPassed] = useState(0);
 
+  const { cycles, activeCycleId } = cyclesState;
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
 
   const setAmountSecondsPassedHandler = (seconds: number) => {
@@ -91,12 +115,6 @@ export const CyclesContextProvider = ({ children }: CyclesContextProviderProps) 
       }
     });
 
-    // toda vez qua alteramos o estado e esse estado depende da sua versão anterior(antes de alterar),
-    // é mais seguro setarmos o valor de estado em formato de função, onde pegamos o estado atual(state), copiamos e por fim adicionamos a nova informação
-    /*
-    setCycles((state) => [...state, newCycle]);
-    */
-    setActiveCycleId(id); // setamos o id do ciclo atual no estado activeCycleId
     setAmountSecondsPassed(0); // zeramos o contador de quantos segundos já se passaram
   };
 
@@ -107,20 +125,6 @@ export const CyclesContextProvider = ({ children }: CyclesContextProviderProps) 
         activeCycleId
       }
     });
-
-    /*
-    setCycles( // ao interromper um ciclo, será chamada a função que altera o estado dos ciclos(setCycles)
-      cycles.map((cycle) => { // irá ercorrer todos os ciclos
-        if (cycle.id === activeCycleId) { // e verifica cada ciclo, se ele está ativo(é igual a activeCycleId)
-          return { ...cycle, interruptedDate: new Date() }; // se verdadeiro, retorna todos os dados do ciclo, adicionando a data de interrupção dele
-        } else { // se não, só retorna a ciclo sem alterações
-          return cycle;
-        }
-      })
-    );
-    */
-
-    setActiveCycleId(null); // por fim, muda o estado da variável que armazena o id do ciclo ativo para null
   };
 
   return (
