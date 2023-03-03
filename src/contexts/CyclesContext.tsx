@@ -38,35 +38,48 @@ interface CyclesState {
 
 export const CyclesContextProvider = ({ children }: CyclesContextProviderProps) => {
   const [cyclesState, dispatch] = useReducer((state: CyclesState, action: any) => {
-    if (action.type === 'ADD_NEW_CYCLE') {
-      return {
-        ...state,
-        cycles: [...state.cycles, action.payload.newCycle],
-        activeCycleId: action.payload.newCycle.id
-      }
-    }
+    switch (action.type) {
+      case "ADD_NEW_CYCLE":
+        return {
+          ...state,
+          cycles: [...state.cycles, action.payload.newCycle],
+          activeCycleId: action.payload.newCycle.id
+        }
 
-    if (action.type === 'INTERRUPT_CURRENT_CYCLE') {
-      return {
-        ...state,
-        cycles: state.cycles.map((cycle) => {
-          if (cycle.id === state.activeCycleId) {
-            return { ...cycle, interruptedDate: new Date() };
-          } else {
-            return cycle;
-          }
-        }),
-        activeCycleId: null
-      }
-    }
+      case "INTERRUPT_CURRENT_CYCLE":
+        return {
+          ...state,
+          cycles: state.cycles.map((cycle) => {
+            if (cycle.id === state.activeCycleId) {
+              return { ...cycle, interruptedDate: new Date() };
+            } else {
+              return cycle;
+            }
+          }),
+          activeCycleId: null
+        }
 
-    return state;
+      case "MARK_CURRENT_CYCLE_AS_FINISHED":
+        return {
+          ...state,
+          cycles: state.cycles.map((cycle) => {
+            if (cycle.id === state.activeCycleId) {
+              return { ...cycle, finishedDate: new Date() };
+            } else {
+              return cycle;
+            }
+          }),
+          activeCycleId: null
+        }
+
+      default:
+        return state;
+    }
   },
   {
     cycles: [],
     activeCycleId: null
   });
-
 
   const [amountSecondsPassed, setAmountSecondsPassed] = useState(0);
 
@@ -84,18 +97,6 @@ export const CyclesContextProvider = ({ children }: CyclesContextProviderProps) 
         activeCycleId
       }
     });
-
-    /*
-    setCycles((state) => // vamos informar que o ciclo foi encerrado, chamando a função que altera o estado dos ciclos(setCycles)
-      state.map((cycle) => { // irá ercorrer todos os ciclos
-        if (cycle.id === activeCycleId) {  // e verifica cada ciclo, se ele está ativo(é igual a activeCycleId)
-          return { ...cycle, finishedDate: new Date() }; // se verdadeiro, retorna todos os dados do ciclo, adicionando a data de interrupção dele
-        } else { // se não, só retorna a ciclo sem alterações
-          return cycle;
-        }
-      })
-    );
-    */
   };
 
   const createNewCycle = (data: CreateCycleData) => {
