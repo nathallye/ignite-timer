@@ -1120,3 +1120,11 @@ Solução: Context API -> Permite compartilhamos informações entre vários com
 ### Listagem do histórico
 
 #### Formatação de data
+
+### Criando reducer de ciclos
+
+Agora vamos aprender um novo conceito, chamado de `userReducer` que serve para armazenar informações mais complexas e que demandam muitas Iremos aplicar o `userReducer` nos ciclos da nossa aplicação.
+
+`useReducer`: Uma alternativa para `useState`. Aceita um reducer do tipo `(state, action) => newState` e retorna o estado atual, junto com um método `dispatch`.
+
+*useReducer é geralmente preferível em relação ao useState* quando se tem uma *lógica de estado complexa* que envolve múltiplos sub-valores, ou *quando o próximo estado depende do estado anterior*. useReducer também possibilita a otimização da performance de componentes que disparam atualizações profundas porque é possível passar o dispatch para baixo, ao invés de callbacks.
