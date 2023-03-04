@@ -1280,3 +1280,7 @@ export const CyclesContextProvider = ({ children }: CyclesContextProviderProps) 
   );
 };
 ```
+
+### Separando Action Types
+
+### Separando Actions
