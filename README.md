@@ -433,8 +433,9 @@ export const Home = () => {
           <datalist id="task-suggestions">
             {/* lista de opções para o input*/}
             <option value="Trabalhar" />
-            <option value="Assistir aulas de inglês" />
-            <option value="Assistir aulas de react" />
+            <option value="Assistir aulas de Inglês" />
+            <option value="Assistir aulas de React" />
+            <option value="Ler livro TypeScript" />
           </datalist>
 
           <label htmlFor="minutesAmount">durante</label>
