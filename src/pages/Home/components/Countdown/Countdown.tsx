@@ -22,18 +22,9 @@ export const Countdown = () => {
 
     if (activeCycle) { // se existir um ciclo ativo
       interval = setInterval(() => { // atribuindo o intervalo da função set interval a variável interval
-        const secondsDifference = differenceInSeconds(new Date(), activeCycle.startDate); // calcula a diferença em segundos entre a data atual e a data que o ciclo começou, e armazena o resultado na variável
+        const secondsDifference = differenceInSeconds(new Date(), new Date(activeCycle.startDate)); // calcula a diferença em segundos entre a data atual e a data que o ciclo começou, e armazena o resultado na variável
 
         if (secondsDifference >= totalSeconds) { // se a diferença de segundos, for maior ou igual que o total de segundos
-          // setCycles((state) => // vamos informar que o ciclo foi encerrado, chamando a função que altera o estado dos ciclos(setCycles)
-          //   state.map((cycle) => { // irá ercorrer todos os ciclos
-          //     if (cycle.id === activeCycleId) {  // e verifica cada ciclo, se ele está ativo(é igual a activeCycleId)
-          //       return { ...cycle, finishedDate: new Date() }; // se verdadeiro, retorna todos os dados do ciclo, adicionando a data de interrupção dele
-          //     } else { // se não, só retorna a ciclo sem alterações
-          //       return cycle;
-          //     }
-          //   })
-          // )
           markCurrentCycleAsFinished();
 
           setAmountSecondsPassedHandler(totalSeconds);
