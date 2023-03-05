@@ -1,5 +1,9 @@
 # Ignite Timer
 
+<div align="center">
+  <img width="700" src="https://user-images.githubusercontent.com/86172286/222938829-9bf81af1-2b92-4efd-b08f-68217c935f6d.gif">
+</div>
+
 ## Criando um projeto React com o Vite
 
 Para a criação do projeto React com o Vite utilizei o passo a passo que consta na documentação do Vite: https://vitejs.dev/guide/;
