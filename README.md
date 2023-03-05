@@ -1283,11 +1283,44 @@ export const CyclesContextProvider = ({ children }: CyclesContextProviderProps) 
 
 ### Separando Action Types
 
-
+Iremos criar uma `ActionTypes` para separar as nossas actions, ajudando na manutenção do código e facilitando a sua chamada caso a gente não se recorde exatamente o nome que foi dado a ela.
 
 ### Separando Actions
 
+Agora iremos abstrair as chamadas das actions para outro arquivo.
 
+- Criação do arquivo `actions.ts`:
+
+``` TS
+import { Cycle } from "./reducer";
+
+export enum ActionTypes {
+  ADD_NEW_CYCLE = "ADD_NEW_CYCLE",
+  INTERRUPT_CURRENT_CYCLE = "INTERRUPT_CURRENT_CYCLE",
+  MARK_CURRENT_CYCLE_AS_FINISHED = "MARK_CURRENT_CYCLE_AS_FINISHED"
+}
+
+export const addNewCycleAction = (newCycle: Cycle) => {
+  return {
+    type: ActionTypes.ADD_NEW_CYCLE,
+    payload: {
+      newCycle
+    }
+  }
+}
+
+export const markCurrentCycleAsFinishedAction = () =>  {
+  return {
+    type: ActionTypes.MARK_CURRENT_CYCLE_AS_FINISHED
+  }
+}
+
+export const interruptCurrentCycleAction = () => {
+  return {
+    type: ActionTypes.INTERRUPT_CURRENT_CYCLE
+  }
+}
+```
 
 ### Trabalhando com a biblioteca immer
 
