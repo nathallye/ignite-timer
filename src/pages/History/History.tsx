@@ -21,7 +21,7 @@ export const History = () => {
             <tr>
               <th>Tarefa</th>
               <th>Duração</th>
-              <th>Duração</th>
+              <th>Início</th>
               <th>Status</th>
             </tr>
           </thead>
